@@ -1,0 +1,14 @@
+{
+  "browserDoesNotSupportRecorder": "Browser does not support Speech Recognition",
+  "areYouSureToLeavePage": "Are you sure to leave page?",
+  "yes": "Yes",
+  "no": "No",
+  "english": "English",
+  "persian": "Persian",
+  "stop": "Stop",
+  "start": "Start",
+  "sendCommand": "Please click on record button to record your voice",
+  "areYourSureAboutSendingCommand": "Are you sure about sending command?",
+  "commandIsNotValid": "Command is not valid",
+  "commandText": "Command Text"
+}
