@@ -16,12 +16,15 @@ import { onBeforeRouteLeave } from 'vue-router';
 import { toLowerCaseWithRemovePunctuations } from 'src/services/ui.services';
 import { Language } from 'src/models/language.models';
 import { RecordAction } from 'src/models/record.models';
+import { Platform } from 'quasar';
+import { useVModel } from 'src/services/vue.services';
 
 const recognition = new window.webkitSpeechRecognition();
 const transcript = ref<string>('');
 const isRecording = ref<boolean>(false);
 const isInCalculateResult = ref<boolean>(false);
 const wantsToLeavePage = ref<boolean>(false);
+const automaticallyStopped = ref<boolean>(false);
 
 interface SpeechRecognitionEvent extends Event {
   resultIndex: number;
@@ -29,14 +32,15 @@ interface SpeechRecognitionEvent extends Event {
 }
 
 interface Props {
-  action: RecordAction;
   tag?: string;
   lang?: Language;
+  action: RecordAction;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   tag: 'span',
   lang: 'en-US',
+  action: 'stop',
 });
 
 const emits = defineEmits([
@@ -44,18 +48,23 @@ const emits = defineEmits([
   'onStopped',
   'onRecording',
   'onCalculateResult',
+  'update:action',
 ]);
+
+const action = useVModel<RecordAction>(props, emits, 'action');
 
 function stop() {
   isRecording.value = false;
-  isInCalculateResult.value = true;
+  if (automaticallyStopped.value === false) {
+    isInCalculateResult.value = true;
+  }
 
   recognition.stop();
 }
 
 watch(
-  () => props.action,
-  async (newValue) => {
+  () => action.value,
+  (newValue) => {
     if (newValue === 'start') {
       recognition.start();
     }
@@ -68,21 +77,21 @@ watch(
 
 watch(
   () => isRecording.value,
-  async (newValue) => {
+  (newValue) => {
     emits('onRecording', newValue);
   }
 );
 
 watch(
   () => isInCalculateResult.value,
-  async (newValue) => {
+  (newValue) => {
     emits('onCalculateResult', newValue);
   }
 );
 
 watch(
   () => props.lang,
-  async (newValue) => {
+  (newValue) => {
     recognition.lang = newValue;
   },
   {
@@ -101,9 +110,15 @@ onMounted(() => {
   recognition.onstart = () => {
     transcript.value = '';
     isRecording.value = true;
+    automaticallyStopped.value = false;
   };
 
   recognition.onend = () => {
+    action.value = 'stop';
+    if (Platform.is.mobile && isRecording.value) {
+      automaticallyStopped.value = true;
+    }
+
     isInCalculateResult.value = false;
 
     if (transcript.value && wantsToLeavePage.value === false) {
@@ -112,9 +127,15 @@ onMounted(() => {
   };
 
   recognition.onresult = (event: SpeechRecognitionEvent) => {
-    transcript.value = toLowerCaseWithRemovePunctuations(
-      event.results[0][0].transcript
-    );
+    if (Platform.is.desktop) {
+      transcript.value = toLowerCaseWithRemovePunctuations(
+        event.results[0][0].transcript
+      );
+    } else {
+      transcript.value = toLowerCaseWithRemovePunctuations(
+        event.results[event.results.length - 1][0].transcript
+      );
+    }
 
     emits('onResult', transcript.value);
   };

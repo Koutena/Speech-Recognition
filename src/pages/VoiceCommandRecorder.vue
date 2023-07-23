@@ -5,7 +5,7 @@
       rounded
       unelevated
       size="sm"
-      class="language q-mb-xs"
+      class="languag"
       :options="[
         { label: $t('english'), value: 'en-US' },
         { label: $t('persian'), value: 'fa-IR' },
@@ -13,9 +13,8 @@
     />
 
     <q-space />
-
     <x-recorder
-      :action="action"
+      v-model:action="action"
       :lang="lang"
       @on-recording="onRecording"
       @on-calculate-result="onCalculateResult"
