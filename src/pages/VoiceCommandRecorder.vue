@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-lg">
-    <h6>Version: 1</h6>
+    <h6>Version: 2</h6>
     <hr />
     <div v-if="supportedRecorder">
       <q-btn-toggle
@@ -8,7 +8,7 @@
         rounded
         unelevated
         size="sm"
-        class="languag"
+        class="language"
         :options="[
           { label: $t('english'), value: 'en-US' },
           { label: $t('persian'), value: 'fa-IR' },
