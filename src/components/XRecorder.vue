@@ -2,7 +2,7 @@
   <component :is="props.tag">
     <slot />
     <hr />
-    <div>
+    <div class="q-mt-md">
       {{ transcript }}
     </div>
   </component>
