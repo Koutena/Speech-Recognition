@@ -19,7 +19,9 @@ import { RecordAction } from 'src/models/record.models';
 import { Platform } from 'quasar';
 import { useVModel } from 'src/services/vue.services';
 
-const recognition = new window.webkitSpeechRecognition();
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
 const transcript = ref<string>('');
 const isRecording = ref<boolean>(false);
 const isInCalculateResult = ref<boolean>(false);
@@ -102,10 +104,6 @@ watch(
 onMounted(() => {
   recognition.continuous = true;
   recognition.interimResults = true;
-
-  if (!('webkitSpeechRecognition' in window)) {
-    console.error(t('browserDoesNotSupportRecorder'));
-  }
 
   recognition.onstart = () => {
     transcript.value = '';

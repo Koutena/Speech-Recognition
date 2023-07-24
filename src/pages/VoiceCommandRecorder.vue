@@ -1,5 +1,5 @@
 <template>
-  <div style="margin: 20px">
+  <div v-if="supportedRecorder" style="margin: 20px">
     <q-btn-toggle
       v-model="lang"
       rounded
@@ -41,6 +41,9 @@
       {{ $t('sendCommand') }}
     </x-recorder>
   </div>
+  <div v-else>
+    {{ $t('browserDoesNotSupportRecorder') }}
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -51,7 +54,7 @@ import { Notify } from 'quasar';
 import XRecorder from 'src/components/XRecorder.vue';
 import { toLowerCaseWithRemovePunctuations } from 'src/services/ui.services';
 import { Language } from 'src/models/language.models';
-import { RecordAction } from 'src/models/record.models';
+import { RecordAction, supportedRecorder } from 'src/models/record.models';
 
 const lang = ref<Language>('en-US');
 const action = ref<RecordAction>('stop');
