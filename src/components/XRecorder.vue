@@ -127,15 +127,19 @@ onMounted(() => {
   recognition.onresult = (event: SpeechRecognitionEvent) => {
     console.log({ event });
 
-    if (Platform.is.desktop) {
-      transcript.value = toLowerCaseWithRemovePunctuations(
-        event.results[0][0].transcript
-      );
-    } else {
-      transcript.value = toLowerCaseWithRemovePunctuations(
-        event.results[event.results.length - 1][0].transcript
-      );
-    }
+    transcript.value = toLowerCaseWithRemovePunctuations(
+      event.results[0][0].transcript
+    );
+
+    // if (Platform.is.desktop) {
+    //   transcript.value = toLowerCaseWithRemovePunctuations(
+    //     event.results[0][0].transcript
+    //   );
+    // } else {
+    //   transcript.value = toLowerCaseWithRemovePunctuations(
+    //     event.results[event.results.length - 1][0].transcript
+    //   );
+    // }
 
     emits('onResult', transcript.value);
   };
