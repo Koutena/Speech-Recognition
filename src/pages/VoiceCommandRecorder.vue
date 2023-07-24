@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-lg">
-    <h6>Version: 3</h6>
+    <h6>Version: 4</h6>
     <hr />
     <div v-if="supportedRecorder">
       <q-btn-toggle
