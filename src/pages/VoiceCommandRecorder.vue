@@ -1,48 +1,53 @@
 <template>
-  <div v-if="supportedRecorder" style="margin: 20px">
-    <q-btn-toggle
-      v-model="lang"
-      rounded
-      unelevated
-      size="sm"
-      class="languag"
-      :options="[
-        { label: $t('english'), value: 'en-US' },
-        { label: $t('persian'), value: 'fa-IR' },
-      ]"
-    />
-
-    <q-space />
-    <x-recorder
-      v-model:action="action"
-      :lang="lang"
-      @on-recording="onRecording"
-      @on-calculate-result="onCalculateResult"
-      @on-result="onResult"
-      @on-stopped="onStopped"
-    >
-      <q-spinner-hourglass
-        v-if="isInCalculateResult"
-        color="primary"
+  <div class="q-pa-lg">
+    <h6>Version: 1</h6>
+    <hr />
+    <div v-if="supportedRecorder">
+      <q-btn-toggle
+        v-model="lang"
+        rounded
+        unelevated
         size="sm"
+        class="languag"
+        :options="[
+          { label: $t('english'), value: 'en-US' },
+          { label: $t('persian'), value: 'fa-IR' },
+        ]"
       />
-      <q-icon
-        v-else
-        name="mdi-microphone"
-        size="sm"
-        :color="isRecording ? 'negative' : 'primary'"
-        class="cursor-pointer"
-        @click="toggleRecord"
+
+      <q-space class="q-mt-md" />
+
+      <x-recorder
+        v-model:action="action"
+        :lang="lang"
+        @on-recording="onRecording"
+        @on-calculate-result="onCalculateResult"
+        @on-result="onResult"
+        @on-stopped="onStopped"
       >
-        <q-tooltip>
-          {{ isRecording ? $t('stop') : $t('start') }}
-        </q-tooltip>
-      </q-icon>
-      {{ $t('sendCommand') }}
-    </x-recorder>
-  </div>
-  <div v-else>
-    {{ $t('browserDoesNotSupportRecorder') }}
+        <q-spinner-hourglass
+          v-if="isInCalculateResult"
+          color="primary"
+          size="sm"
+        />
+        <q-icon
+          v-else
+          name="mdi-microphone"
+          size="sm"
+          :color="isRecording ? 'negative' : 'primary'"
+          class="cursor-pointer"
+          @click="toggleRecord"
+        >
+          <q-tooltip>
+            {{ isRecording ? $t('stop') : $t('start') }}
+          </q-tooltip>
+        </q-icon>
+        {{ $t('sendCommand') }}
+      </x-recorder>
+    </div>
+    <div v-else>
+      {{ $t('browserDoesNotSupportRecorder') }}
+    </div>
   </div>
 </template>
 
